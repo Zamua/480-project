@@ -17,15 +17,15 @@ public class ClusterSeeder
         this.rowRand = new Random();
         this.colRand = new Random();
 
-        this.a1Row = rowRand.nextInt();
-        this.a1Col = colRand.nextInt();
-        this.a2Row = rowRand.nextInt();
-        this.a2Col = colRand.nextInt();
+        this.a1Row = rowRand.nextInt(gridA.length);
+        this.a1Col = colRand.nextInt(gridA[0].length);
+        this.a2Row = rowRand.nextInt(gridA.length);
+        this.a2Col = colRand.nextInt(gridA[0].length);
 
-        this.b1Row = rowRand.nextInt();
-        this.b1Col = colRand.nextInt();
-        this.b2Row = rowRand.nextInt();
-        this.b2Col = colRand.nextInt();
+        this.b1Row = rowRand.nextInt(gridA.length);
+        this.b1Col = colRand.nextInt(gridA[0].length);
+        this.b2Row = rowRand.nextInt(gridA.length);
+        this.b2Col = colRand.nextInt(gridA[0].length);
 
         System.err.println(a1Row);
         System.err.println(a1Col);
