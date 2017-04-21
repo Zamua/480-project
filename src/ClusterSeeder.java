@@ -27,15 +27,6 @@ public class ClusterSeeder
         this.b2Row = rowRand.nextInt(gridA.length);
         this.b2Col = colRand.nextInt(gridA[0].length);
 
-        System.err.println(a1Row);
-        System.err.println(a1Col);
-        System.err.println(a2Row);
-        System.err.println(a2Col);
-        System.err.println(b1Row);
-        System.err.println(b1Col);
-        System.err.println(b2Row);
-        System.err.println(b2Col);
-
         this.gridA = gridA;
         this.gridB = gridB;
     }
