@@ -53,4 +53,9 @@ public class GridUtils
             }
         }
     }
+    
+    // This print method accepts a cluster object 
+    public static void print(Cluster a) {
+    	print(a.cluster);
+    }
 }
