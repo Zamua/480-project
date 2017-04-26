@@ -33,17 +33,17 @@ public class ClusterSeeder
 
     public void seed()
     {
-        gridA[a1Row][a1Col] = 1;
-        gridA[a2Row][a2Col] = 1;
-        gridB[b1Row][b1Col] = 1;
-        gridB[b2Row][b2Col] = 1;
-
         tandemFloodFill(gridA, a1Row, a1Col, a2Row, a2Col);
         tandemFloodFill(gridB, b1Row, b1Col, b2Row, b2Col);
     }
 
     private void tandemFloodFill(int[][] grid, int row1, int col1, int row2, int col2)
     {
+		if (row1 >= grid.length || row2 >= grid.length || col1 >= grid[0].length ||
+			col2 >= grid[0].length || row1 < 0 || row2 < 0 || col1 < 0 || col2 < 0) {
+			return;
+		}
+
         if (grid[row1][col1] != 0 && grid[row2][col2] != 0) {
             return;
         }
@@ -53,15 +53,15 @@ public class ClusterSeeder
         }
 
         if (grid[row2][col2] == 0) {
-            grid[row2][col2] = -1;
+            grid[row2][col2] = 2;
         }
 
         for (int r = 0; r < directions.length; r++) {
-            tandemFloodFill(grid, row1 + directions[r], col1, row2 + directions[r], col2);
-        }
+			tandemFloodFill(grid, row1 + directions[r], col1, row2 + directions[r], col2);
+		}
 
         for (int c = 0; c < directions.length; c++) {
-            tandemFloodFill(grid, row1, col1 + directions[c], row2, col2 + directions[c]);
-        }
-    }
+			tandemFloodFill(grid, row1, col1 + directions[c], row2, col2 + directions[c]);
+		}
+	}
 }
