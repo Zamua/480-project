@@ -3,7 +3,8 @@ public class Cluster
     int[][] cluster;
     int h;
     int w;
-  
+    Cluster pair;
+    
     public Cluster(int[][] a) {
         this.cluster = a;
         this.h       = a.length;
