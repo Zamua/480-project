@@ -12,7 +12,6 @@ public class BipartGraph
       this.b = b;
       this.weightMatrix = new int[a.length][b.length];
       calcWeightMatrix();
-      mask = weightMatrix;
     }
    
     /**
@@ -57,6 +56,7 @@ public class BipartGraph
               weightMatrix[j][i] -= min;
           }
       }
+      coverZeros();
       // Cover all zeros with a minimum number of lines
       while (coverZeros() != weightMatrix.length) {
           // Find smallest uncovered edge
@@ -70,10 +70,15 @@ public class BipartGraph
           // Subtract smallest from all uncovered edges
           for (int i = 0; i < mask.length; i++) {
               for (int j = 0; j < mask.length; j++) {
-                  if (mask[i][j] > -1) mask[i][j] -= minUncovered;
+                  if (mask[i][j] > -1) weightMatrix[i][j] -= minUncovered;
               }
           }
           // Add minUncovered to all doubly covered elements
+          for (int i = 0; i < mask.length; i++) {
+        	  for (int j = 0; j < mask.length; j++) {
+        		  if (mask[i][j] == -2) weightMatrix[i][j] += minUncovered;
+        	  }
+          }
       }
      
       return -1;
@@ -88,6 +93,14 @@ public class BipartGraph
      */
     public int coverZeros()
     {
+    	mask = new int[weightMatrix.length][weightMatrix.length];
+    	// Copy weight matrix to a mask array
+    	for (int i = 0; i < mask.length; i++) {
+    		for (int j = 0; j < mask.length; j++) {
+    			mask[i][j] = weightMatrix[i][j];
+    		}
+    	}
+    	
         int numberLines = 0;
        
         while (hasZeros(mask)) {
