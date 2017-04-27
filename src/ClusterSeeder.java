@@ -10,7 +10,8 @@ public class ClusterSeeder
     private int b2Row, b2Col;
     private int[][] gridA, gridB;
 
-    private final int[] directions = { -1, 1 };
+    private final int[] row = { -1, 0, 1, 0 };
+    private final int[] col = { 0, -1, 0, 1 };
 
     public ClusterSeeder(int[][] gridA, int[][] gridB)
     {
@@ -39,29 +40,33 @@ public class ClusterSeeder
 
     private void tandemFloodFill(int[][] grid, int row1, int col1, int row2, int col2)
     {
-		if (row1 >= grid.length || row2 >= grid.length || col1 >= grid[0].length ||
-			col2 >= grid[0].length || row1 < 0 || row2 < 0 || col1 < 0 || col2 < 0) {
-			return;
-		}
-
-        if (grid[row1][col1] != 0 && grid[row2][col2] != 0) {
+        if (inBounds(grid, row1, col1) && grid[row1][col1] != 0 &&
+            inBounds(grid, row2, col2) && grid[row2][col2] != 0) {
             return;
         }
 
-        if (grid[row1][col1] == 0) {
+        if (inBounds(grid, row1, col1) && grid[row1][col1] == 0) {
             grid[row1][col1] = 1;
         }
 
-        if (grid[row2][col2] == 0) {
+        if (inBounds(grid, row2, col2) && grid[row2][col2] == 0) {
             grid[row2][col2] = 2;
         }
 
-        for (int r = 0; r < directions.length; r++) {
-			tandemFloodFill(grid, row1 + directions[r], col1, row2 + directions[r], col2);
-		}
+        for (int i = 0; i < 4; i++) {
+            int ri1 = row1 + row[i];
+            int ri2 = row2 + row[i];
+            int ci1 = col1 + col[i];
+            int ci2 = col2 + col[i];
 
-        for (int c = 0; c < directions.length; c++) {
-			tandemFloodFill(grid, row1, col1 + directions[c], row2, col2 + directions[c]);
-		}
-	}
+            System.err.printf("ri1: %d\tri2: %d\tci1: %d\tci2: %d\n", ri1, ri2, ci1, ci2);
+            tandemFloodFill(grid, ri1, ci1, ri2, ci2);
+        }
+    }
+
+    private boolean inBounds(int[][] grid, int row, int col)
+    {
+        System.err.println(row > 0 && col > 0 && row < grid.length && col < grid[row].length);
+        return row > 0 && col > 0 && row < grid.length && col < grid[row].length;
+    }
 }
