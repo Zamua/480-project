@@ -4,25 +4,27 @@ public class Driver
 {
     public static void main(String[] args) throws FileNotFoundException
     {
+		ClusterSeeder cs;
         int[][] A = GridUtils.read("A");
         int[][] B = GridUtils.read("B");
 
-        //cs = new ClusterSeeder(A, B);
+        cs = new ClusterSeeder(A, B);
 
-        //System.err.println("BEFORE");
-        //System.err.println("A");
-        //GridUtils.print(A);
-        //System.err.println("B");
-        //GridUtils.print(B);
+        System.err.println("BEFORE");
+        System.err.println("A");
+        GridUtils.print(A);
+        System.err.println("B");
+        GridUtils.print(B);
 
-        //cs.seed();
+        cs.seed();
         
-		//System.err.println("After seeding");
-        //System.err.println("A");
-        //GridUtils.print(A);
-        //System.err.println("B");
-        //GridUtils.print(B);
+		System.err.println("After seeding");
+        System.err.println("A");
+        GridUtils.print(A);
+        System.err.println("B");
+        GridUtils.print(B);
         
+		/*
         Cluster c1 = new Cluster(A);
         Cluster c2 = new Cluster(B);
         
@@ -32,5 +34,6 @@ public class Driver
         GridUtils.print(c1);
         System.err.println("");
         GridUtils.print(c2);
+		*/
     }
 }
