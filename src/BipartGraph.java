@@ -1,3 +1,13 @@
+/**
+ * This class includes an implementation of the Hungarian algorithm,
+ * used to find the minimal bijection of a weighted bipartite graph.
+ * 
+ * In this case, the vetexes represents clusters of two figures
+ * The edges represent the distance score between two clusters.
+ *
+ * @author NIKOLAI MAYO-PITTS
+ */
+
 public class BipartGraph
 {
     Cluster[] a;
