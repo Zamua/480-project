@@ -1,5 +1,4 @@
 import java.awt.Point;
-import java.util.HashSet;
 import java.util.Random;
 
 public class ClusterSeeder
@@ -25,7 +24,6 @@ public class ClusterSeeder
 
         this.a1Seed = generateSeed(gridA);
         this.b1Seed = generateSeed(gridB);
-
 
         // Ensure seeds aren't equivalent for gridA
         this.a2Seed = generateSeed(gridA);
@@ -63,17 +61,29 @@ public class ClusterSeeder
         }
 
         for (int i = 0; i < 4; i++) {
-            int ri1 = row1 + row[i];
-            int ci1 = col1 + col[i];
-            int ri2 = row2 + row[i];
-            int ci2 = col2 + col[i];
+            int newRow = row[i];
+            int newCol = col[i];
             if (toggle) {
-                if (inBounds(grid, ri1, ci1) && grid[ri1][ci1] == 0) {
-                    tandemFloodFill(grid, ri1, ci1, row2, col2, !toggle);
+                newRow += row1;
+                newCol += col1;
+                if (newRow == row2 && newCol == col2) {
+                    continue;
+                }
+                if (inBounds(grid, newRow, newCol) && grid[newRow][newCol] == 0) {
+                    // give old values to seed2 because seed1 just filled
+                    tandemFloodFill(grid, newRow, newCol, row2, col2, !toggle);
                 }
             } else {
-                if (inBounds(grid, ri2, ci2) && grid[ri2][ci2] == 0) {
-                    tandemFloodFill(grid, row1, col1, ri2, ci2, !toggle);
+                newRow += row2;
+                newCol += col2;
+
+                if (newRow == row1 && newCol == col1) {
+                    continue;
+                }
+
+                if (inBounds(grid, newRow, newCol) && grid[newRow][newCol] == 0) {
+                    // give old values to seed1 because seed2 just filled
+                    tandemFloodFill(grid, row1, col1, newRow, newCol, !toggle);
                 }
             }
         }
