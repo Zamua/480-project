@@ -15,22 +15,29 @@ public class ClusterSeeder
     private final int[] row = { 1, 0, -1, 0 };
     private final int[] col = { 0, 1, 0, -1 };
 
-    private HashSet<Point> seeds;
-
     public ClusterSeeder(int[][] gridA, int[][] gridB)
     {
+        this.gridA = gridA;
+        this.gridB = gridB;
+
         this.rowRand = new Random();
         this.colRand = new Random();
 
-        this.seeds = new HashSet<Point>();
+        this.a1Seed = generateSeed(gridA);
+        this.b1Seed = generateSeed(gridB);
 
-        this.a1Seed = generateUniqueSeed(gridA);
-        this.a2Seed = generateUniqueSeed(gridA);
-        this.b1Seed = generateUniqueSeed(gridB);
-        this.b2Seed = generateUniqueSeed(gridB);
 
-        this.gridA = gridA;
-        this.gridB = gridB;
+        // Ensure seeds aren't equivalent for gridA
+        this.a2Seed = generateSeed(gridA);
+        while (a2Seed.equals(a1Seed)) {
+            this.a2Seed = generateSeed(gridA);
+        }
+
+        // Ensure seeds aren't equivalent for gridB
+        this.b2Seed = generateSeed(gridB);
+        while (b2Seed.equals(b1Seed)) {
+            this.a2Seed = generateSeed(gridB);
+        }
     }
 
     public void seed()
@@ -40,13 +47,9 @@ public class ClusterSeeder
         // tandemFloodFill(gridB, b1Row, b1Col, b2Row, b2Col, true);
     }
 
-    private Point generateUniqueSeed(int[][] grid)
+    private Point generateSeed(int[][] grid)
     {
         Point seed = new Point(colRand.nextInt(grid[0].length), rowRand.nextInt(grid.length));
-
-        while (seeds.contains(seed)) {
-            seed = new Point(colRand.nextInt(grid[0].length), rowRand.nextInt(grid.length));
-        }
 
         return seed;
     }
