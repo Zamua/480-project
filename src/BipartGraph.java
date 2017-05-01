@@ -1,3 +1,13 @@
+/**
+ * This class includes an implementation of the Hungarian algorithm,
+ * used to find the minimal bijection of a weighted bipartite graph.
+ * 
+ * In this case, the vetexes represents clusters of two figures
+ * The edges represent the distance score between two clusters.
+ *
+ * @author NIKOLAI MAYO-PITTS
+ */
+
 public class BipartGraph
 {
     Cluster[] a;
@@ -12,7 +22,6 @@ public class BipartGraph
       this.b = b;
       this.weightMatrix = new int[a.length][b.length];
       calcWeightMatrix();
-      mask = weightMatrix;
     }
    
     /**
@@ -57,6 +66,7 @@ public class BipartGraph
               weightMatrix[j][i] -= min;
           }
       }
+      coverZeros();
       // Cover all zeros with a minimum number of lines
       while (coverZeros() != weightMatrix.length) {
           // Find smallest uncovered edge
@@ -70,11 +80,18 @@ public class BipartGraph
           // Subtract smallest from all uncovered edges
           for (int i = 0; i < mask.length; i++) {
               for (int j = 0; j < mask.length; j++) {
-                  if (mask[i][j] > -1) mask[i][j] -= minUncovered;
+                  if (mask[i][j] > -1) weightMatrix[i][j] -= minUncovered;
               }
           }
           // Add minUncovered to all doubly covered elements
+          for (int i = 0; i < mask.length; i++) {
+        	  for (int j = 0; j < mask.length; j++) {
+        		  if (mask[i][j] == -2) weightMatrix[i][j] += minUncovered;
+        	  }
+          }
       }
+      
+      createPairs();
      
       return -1;
     }
@@ -88,6 +105,14 @@ public class BipartGraph
      */
     public int coverZeros()
     {
+    	mask = new int[weightMatrix.length][weightMatrix.length];
+    	// Copy weight matrix to a mask array
+    	for (int i = 0; i < mask.length; i++) {
+    		for (int j = 0; j < mask.length; j++) {
+    			mask[i][j] = weightMatrix[i][j];
+    		}
+    	}
+    	
         int numberLines = 0;
        
         while (hasZeros(mask)) {
@@ -139,7 +164,56 @@ public class BipartGraph
         
         return numberLines; // Return the number of lines
     }
-   
+    
+    /**
+     * Sets the pair field of each Cluster object, according to
+     * the minimal weight bijection.
+     */
+    private void createPairs() {
+        mask = new int[weightMatrix.length][weightMatrix.length];
+    	  // Copy weight matrix to a mask array
+    	  for (int i = 0; i < mask.length; i++) {
+    	      for (int j = 0; j < mask.length; j++) {
+    			    mask[i][j] = weightMatrix[i][j];
+    		   }
+    	  }
+        while (hasZeros(mask)) {
+            //Find the row with the fewest zeros
+            int fewestZeroRow = 0;
+            int zeroCount = 0;
+            int minZero = Integer.MAX_VALUE;
+            for (int i = 0; i < mask.length; i++) {
+                for (int j = 0; j < mask.length; j++) {
+                    if (mask[i][j] == 0) zeroCount++;
+                }
+                if (zeroCount < minZero && zeroCount > 0) {
+                    minZero = zeroCount;
+                    fewestZeroRow = i;
+                }
+                zeroCount = 0;
+            }
+            //Choose one and set pairs
+            for (int i = 0; i < mask.length; i++) {
+                if (mask[fewestZeroRow][i] == 0) {
+                  a[fewestZeroRow].pair = b[i];
+                  b[i].pair = a[fewestZeroRow];
+                  mask[fewestZeroRow][i] = -1;
+                  i = mask.length;
+                }
+            }
+            //Mark all other zeros in the column / row
+            for (int i = 0; i < mask.length; i++) {
+                if (mask[fewestZeroRow][i] == 0) mask[fewestZeroRow][i] = -1;
+            }
+            for (int i = 0; i < mask.length; i++) {
+                if (mask[i][fewestZeroRow] == 0) mask[i][fewestZeroRow] = -1;
+            }
+        }
+    }
+    
+    /**
+     * Returns true if the array contains any 0s
+     */ 
     private boolean hasZeros(int[][] a)
     {
         for (int i = 0; i < a.length; i++) {

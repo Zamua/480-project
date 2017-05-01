@@ -1,22 +1,29 @@
+/**
+ * This class represents a cluster in a figure.  It contains several
+ * methods for operating on and comparing clusters.
+ *
+ * @author NIKOLAI MAYO-PITTS
+ */
+
 public class Cluster
 {
-    int[][] cluster;
+    int[][] cluster; // Various operations can transform the position, as well as size of bounding box
+    int[][] fullCluster; // This field preserves the original position and size of the cluster's bounding box
     int h;
     int w;
     Cluster pair;
     
     public Cluster(int[][] a) {
-        this.cluster = a;
-        this.h       = a.length;
-        this.w       = a[0].length;
+        this.cluster     = a;
+        this.fullCluster = a;
+        this.h           = a.length;
+        this.w           = a[0].length;
     }
   
     /**
      * Calculates the distance score of two clusters.
      * Two congruent clusters have a distance score of 0.
      * The score itself represents the number of pixel mismatches.
-     * 
-     * It's ugly but I think it works.
      * 
      * @param other
      * @return The distance score
@@ -59,6 +66,8 @@ public class Cluster
      * This does _not_ consider all possible translations,
      * but it is good enough - and it guarantees to be 0
      * when the two clusters are congruent.
+     *
+     * @return The minimum distance 
      */
     public int minDistance(Cluster other) {
     	int minDis = h*w-1;
@@ -75,6 +84,39 @@ public class Cluster
     	}
     
     	return minDis;
+    }
+    
+    /**
+     * Finds the number of rotations required to minimize
+     * the distance between this and another cluster.
+     *
+     * This is used as a helper method for Copy/Paste.
+     *
+     * @return The number of rotations required
+     */
+    public int getRotationCount(Cluster other)
+    {
+        int minDis = h*w-1;
+        this.minimizeBoundingBox();
+        other.minimizeBoundingBox();
+      
+        int tempDist;
+        int minDist = Integer.MAX_VALUE;
+        int rotationNums = 0;
+        int tempRotNums = 0;
+      
+        for (int i = 0; i < 4; i++) {
+            tempDist = distance(other);
+            if (tempDist < minDist) {
+                minDist = tempDist;
+                rotationNums = tempRotNums;
+            } else {
+                tempRotNums++;
+                this.translate();
+            }
+        }
+        
+        return rotationNums;
     }
   
     /**
